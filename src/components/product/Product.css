@@ -1,0 +1,12 @@
+.product-container {
+  border-radius: 10px;
+  border: 1px solid pink;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+
+  img {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+}
