@@ -4,8 +4,8 @@
   gap: 1.5rem;
   flex-wrap: wrap;
   border-radius: 0.7rem;
-  margin: 1rem;
-  padding: 2rem 3rem;
+  margin: 1rem 1rem 2rem;
+  padding: 2rem 3rem 0.5rem;
   border: 1px solid #ccc;
   position: relative;
 }
@@ -15,8 +15,8 @@
 
   .button-remove {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 0.25rem;
+    top: 0.25rem;
   }
 }
 

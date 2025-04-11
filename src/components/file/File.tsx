@@ -2,12 +2,16 @@ import { AlignEnum } from "../../enums";
 import { FileInterface } from "../../interfaces/file.interface";
 import { Product, Button } from "../";
 import "./File.css";
+import { useDrag, useDrop } from "react-dnd";
+import { useRef, useMemo, CSSProperties } from "react";
+import { ItemTypes } from "../../interfaces";
 
 interface Props {
   file: FileInterface;
   onChangeAlign: (type: AlignEnum, id: string) => void;
   onAddProduct: (id: string) => void;
   onDeleteProduct: (idFile: string, idProduct: string) => void;
+  onMoveFile: (draggedId: string, id: string) => void;
 }
 
 export function File({
@@ -15,12 +19,41 @@ export function File({
   onChangeAlign,
   onAddProduct,
   onDeleteProduct,
+  onMoveFile,
 }: Props) {
+  const ref = useRef(null);
+  const [{ isDragging, handlerId }, connectDrag] = useDrag({
+    type: ItemTypes.FILE,
+    item: { id: file.id },
+    collect: (monitor) => {
+      const result = {
+        handlerId: monitor.getHandlerId(),
+        isDragging: monitor.isDragging(),
+      };
+      return result;
+    },
+  });
+  const opacity = isDragging ? 0 : 1;
+
+  const [, connectDrop] = useDrop({
+    accept: ItemTypes.FILE,
+    hover({ id: draggedId }: { id: string; type: string }) {
+      if (draggedId !== file.id) {
+        onMoveFile(draggedId, file.id);
+      }
+    },
+  });
+  connectDrag(ref);
+  connectDrop(ref);
+
   return (
     <div
+      ref={ref}
+      data-handler-id={handlerId}
       className="file-container"
       style={{
         justifyContent: file.align,
+        opacity,
       }}
     >
       {file.products.map((product) => (

@@ -9,6 +9,7 @@ function App() {
     handleChangeAlign,
     handleAddProduct,
     handleDeleteProduct,
+    handleMoveFile,
   } = useFiles();
   return (
     <>
@@ -20,7 +21,7 @@ function App() {
           </button>
         </div>
       </header>
-      <main>
+      <main className="main">
         {files.map((file) => (
           <File
             key={file.id}
@@ -28,6 +29,7 @@ function App() {
             onChangeAlign={handleChangeAlign}
             onAddProduct={handleAddProduct}
             onDeleteProduct={handleDeleteProduct}
+            onMoveFile={handleMoveFile}
           />
         ))}
       </main>
