@@ -1,14 +1,29 @@
 .header {
-  margin: 2rem;
+  margin: 1rem 2rem;
   font-size: 1.5rem;
 }
 
 .button-header {
+  font-size: 1rem;
   border: none;
   border-radius: 10px;
   box-shadow: 0px 0px 2px 2px rgb(0, 0, 0);
 }
 
 .main {
+  position: relative;
+}
+
+.files-container {
   border: dashed 3px grey;
+  transform-origin: top center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.zoom-controls {
+  padding: 0.5rem 2rem;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  z-index: 1000;
 }

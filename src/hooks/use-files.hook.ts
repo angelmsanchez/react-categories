@@ -52,10 +52,36 @@ export const useFiles = () => {
   const handleMoveFile = (idMove: string, idAfter: string) => {
     setFiles((prevFiles) => [
       ...prevFiles.sort((a, b) => {
-        if (a.id !== idMove && a.id !== idAfter) return 0;
+        if (a.id !== idMove && b.id !== idMove) return 0;
         if (a.id === idMove && b.id === idAfter) return -1;
         if (a.id === idAfter && b.id === idMove) return -1;
         return 0;
+      }),
+    ]);
+  };
+
+  const handleMoveProduct = (
+    idMove: string,
+    idAfter: string,
+    idFile: string
+  ) => {
+    setFiles((prevFiles) => [
+      ...prevFiles.map((file) => {
+        if (file.id === idFile) {
+          const products = [...file.products];
+          const moveIndex = products.findIndex(
+            (product) => product.id === idMove
+          );
+          const afterIndex = products.findIndex(
+            (product) => product.id === idAfter
+          );
+          if (moveIndex !== -1 && afterIndex !== -1) {
+            const [movedProduct] = products.splice(moveIndex, 1);
+            products.splice(afterIndex, 0, movedProduct);
+          }
+          return { ...file, products };
+        }
+        return file;
       }),
     ]);
   };
@@ -79,5 +105,6 @@ export const useFiles = () => {
     handleChangeAlign,
     handleDeleteProduct,
     handleMoveFile,
+    handleMoveProduct,
   };
 };

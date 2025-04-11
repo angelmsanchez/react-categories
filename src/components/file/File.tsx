@@ -3,7 +3,7 @@ import { FileInterface } from "../../interfaces/file.interface";
 import { Product, Button } from "../";
 import "./File.css";
 import { useDrag, useDrop } from "react-dnd";
-import { useRef, useMemo, CSSProperties } from "react";
+import { useRef } from "react";
 import { ItemTypes } from "../../interfaces";
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
   onAddProduct: (id: string) => void;
   onDeleteProduct: (idFile: string, idProduct: string) => void;
   onMoveFile: (draggedId: string, id: string) => void;
+  onMoveProduct: (draggedId: string, id: string) => void;
 }
 
 export function File({
@@ -20,6 +21,7 @@ export function File({
   onAddProduct,
   onDeleteProduct,
   onMoveFile,
+  onMoveProduct,
 }: Props) {
   const ref = useRef(null);
   const [{ isDragging, handlerId }, connectDrag] = useDrag({
@@ -58,7 +60,7 @@ export function File({
     >
       {file.products.map((product) => (
         <section key={product.id} className="product-container">
-          <Product product={product} />
+          <Product product={product} onMoveProduct={onMoveProduct} />
           {file.products.length > 1 && (
             <div className="button-remove">
               <Button
