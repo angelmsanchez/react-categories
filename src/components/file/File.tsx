@@ -12,7 +12,8 @@ interface Props {
   onAddProduct: (id: string) => void;
   onDeleteProduct: (idFile: string, idProduct: string) => void;
   onMoveFile: (draggedId: string, id: string) => void;
-  onMoveProduct: (draggedId: string, id: string) => void;
+  onMoveProduct: (draggedId: string, idProduct: string) => void;
+  onMoveProductByFile?: (draggedId: string, fileId: string) => void;
 }
 
 export function File({
@@ -45,8 +46,12 @@ export function File({
       }
     },
   });
+  const [, connectDropProduct] = useDrop({
+    accept: ItemTypes.PRODUCT,
+  });
   connectDrag(ref);
   connectDrop(ref);
+  connectDropProduct(ref);
 
   return (
     <div

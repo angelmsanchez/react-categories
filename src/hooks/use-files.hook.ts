@@ -65,25 +65,52 @@ export const useFiles = () => {
     idAfter: string,
     idFile: string
   ) => {
-    setFiles((prevFiles) => [
-      ...prevFiles.map((file) => {
-        if (file.id === idFile) {
+    const idFileMove = getFileIdByProductId(idMove);
+    const idFileAfter = getFileIdByProductId(idAfter);
+    if (idFileMove === idFileAfter) {
+      setFiles((prevFiles) => [
+        ...prevFiles.map((file) => {
+          if (file.id === idFile) {
+            const products = [...file.products];
+            const moveIndex = products.findIndex(
+              (product) => product.id === idMove
+            );
+            const afterIndex = products.findIndex(
+              (product) => product.id === idAfter
+            );
+            if (moveIndex !== -1 && afterIndex !== -1) {
+              const [movedProduct] = products.splice(moveIndex, 1);
+              products.splice(afterIndex, 0, movedProduct);
+            }
+            return { ...file, products };
+          }
+          return file;
+        }),
+      ]);
+    } else if (hasMoreOneProducts(idFileMove) && hasAllProducts(idFileAfter)) {
+      let productMove: ProductInterface;
+      let newFiles = files.map((file) => {
+        if (file.id === idFileMove) {
           const products = [...file.products];
           const moveIndex = products.findIndex(
             (product) => product.id === idMove
           );
-          const afterIndex = products.findIndex(
-            (product) => product.id === idAfter
-          );
-          if (moveIndex !== -1 && afterIndex !== -1) {
-            const [movedProduct] = products.splice(moveIndex, 1);
-            products.splice(afterIndex, 0, movedProduct);
-          }
-          return { ...file, products };
+          productMove = products[moveIndex];
+          return {
+            ...file,
+            products: products.filter((product) => product.id !== idMove),
+          };
         }
         return file;
-      }),
-    ]);
+      });
+      newFiles = newFiles.map((file) => {
+        if (file.id === idFileAfter) {
+          return { ...file, products: [...file.products, productMove] };
+        }
+        return file;
+      });
+      setFiles(newFiles);
+    }
   };
 
   const handleChangeAlign = (type: AlignEnum, id: string) => {
@@ -95,6 +122,34 @@ export const useFiles = () => {
         return file;
       }),
     ]);
+  };
+
+  const getFileIdByProductId = (id?: string) => {
+    return files.find((file) =>
+      file.products.find((product) => product.id === id)
+    )?.id;
+  };
+
+  const hasMoreOneProducts = (idFileMove?: string) => {
+    return files
+      .map((file) => {
+        if (file.id === idFileMove) {
+          return file.products.length > 1;
+        }
+        return false;
+      })
+      .includes(true);
+  };
+
+  const hasAllProducts = (idFile?: string) => {
+    return files
+      .map((file) => {
+        if (file.id === idFile) {
+          return file.products.length === 3;
+        }
+        return true;
+      })
+      .includes(false);
   };
 
   return {
